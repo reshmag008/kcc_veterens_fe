@@ -157,6 +157,7 @@ useEffect(() => {
             setPendingCount(prev => prev - 1)
            GetPlayer();
            GetAllPlayers();
+           GetAllTeams();
         })
 
         socket.on("player_unsold", (message: any) => {
@@ -164,6 +165,7 @@ useEffect(() => {
             setPendingCount(prev => prev - 1)
             GetPlayer();
              GetAllPlayers();
+             GetAllTeams();
         })
 
 

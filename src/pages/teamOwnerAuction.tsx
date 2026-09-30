@@ -398,6 +398,17 @@ const LiveAuctionTeam: React.FC = () => {
             .getAllTeams()
             .then((response: any) => {
               setAllTeams(response?.data);
+              let allTms = response?.data || [];
+
+            allTms.forEach(element => {
+
+              if(element.id == teamData.id){
+                teamData.max_bid_amount = element.max_bid_amount;
+                teamData.total_points = element.total_points
+              }
+              
+              })
+
             });
         } catch (error) {
           console.error("Error fetching players:", error);
