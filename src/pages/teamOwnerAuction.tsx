@@ -125,6 +125,9 @@ const LiveAuctionTeam: React.FC = () => {
           console.log("Focus reconnect...");
           newSocket.connect();
           newSocket.emit("join-room", roomId);
+          newSocket.emit("get-auction-state", {
+              roomId,
+            });
         }
       };
   
@@ -149,6 +152,9 @@ const LiveAuctionTeam: React.FC = () => {
             console.log("Manually reconnecting...");
             newSocket.connect();
             newSocket.emit("join-room", roomId);
+            newSocket.emit("get-auction-state", {
+              roomId,
+            });
           }
         }
       };
