@@ -23,6 +23,9 @@ import LiveAuctionPlayerCard from "./pages/Auction";
 import AuctionPlayerPage from "./pages/AuctionControlCenter";
 import PlayerDisplay from "./pages/PlayerDisplay";
 import PlayerAuctionView from "./pages/LiveAuction";
+import LiveAuctionTeam from "./pages/teamOwnerAuction";
+import JoinAuction from "./pages/JoinAuction";
+import AuctioneerLive from "./pages/AuctioneerLive";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +33,17 @@ const AppContent = () => {
   const location = useLocation();
 
   // Hide header on live auction page
-  const hideHeader = location.pathname === "/player-display";
+  // const hideHeader = location.pathname === "/player-display";
+
+  const headerHiddenRoutes = [
+  "/player-display",
+  "/auctioneer_live",
+  "/team_owner_auction",
+  "/join_auction"
+];
+
+const hideHeader = headerHiddenRoutes.includes(location.pathname);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,6 +61,9 @@ const AppContent = () => {
         <Route path="/teams" element={<TeamList />} />
         <Route path="/auction-live" element={<PlayerAuctionView />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/team_owner_auction" element={<LiveAuctionTeam />} />
+        <Route path="/join_auction" element={<JoinAuction />} />
+        <Route path="/auctioneer_live" element={<AuctioneerLive />} />
       </Routes>
     </div>
   );
