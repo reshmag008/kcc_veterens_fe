@@ -96,12 +96,7 @@ useEffect(() => {
       if (!newSocket.connected) {
         console.log("Socket disconnected. Socket.IO will reconnect.");
         newSocket.connect();
-      } else {
-        // Even if socket is connected, refresh auction state
-        newSocket.emit("get-auction-state", {
-          roomId,
-        });
-      }
+      } 
     }
   };
 
@@ -145,7 +140,7 @@ useEffect(() => {
       if (socket) {
 
         socket.on('auction-state', (message:any)=>{
-            console.log("message== ", message);
+            console.log("message==auction-state", message);
             getPlayerById(message.playerId)
             setCurrentBid(message);
             setAuction(message);
