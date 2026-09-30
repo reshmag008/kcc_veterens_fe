@@ -498,7 +498,6 @@ const LiveAuctionTeam: React.FC = () => {
           setSoldCount(response?.data?.soldPlayerCount);
           setUnSoldCount(response?.data?.unSoldPlayerCount);
           setPendingCount(response?.data?.pendingPlayerCount);
-          setAuctionedPlayers(response?.data?.players)
 
           if(response?.data?.players?.length == TOTAL_PLAYER){
             setAuctionStatus("TEAM COMPLETE");
@@ -522,9 +521,7 @@ const LiveAuctionTeam: React.FC = () => {
           teamId: teamData.id
         }
         PlayerService().getAllPlayers(params).then((response: any) => {
-          setSoldCount(response?.data?.soldPlayerCount);
-          setUnSoldCount(response?.data?.unSoldPlayerCount);
-          setPendingCount(response?.data?.pendingPlayerCount);
+          
           setAuctionedPlayers(response?.data?.players)
 
           if(response?.data?.players?.length == TOTAL_PLAYER){
