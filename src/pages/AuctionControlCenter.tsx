@@ -221,9 +221,9 @@ const AuctionPlayerPage: React.FC = () => {
         let lastBidAmount = bidFlow[bidFlow.length - 1].amount;
         console.log("lastBidAmount=== ", lastBidAmount);
         if(lastBidAmount >= 10000){
-        amount = bidAmount + 1000
+        amount = bidAmount + 500
         }else{
-          amount = bidAmount + 1000
+          amount = bidAmount + 500
         }
 
         if (amount > team.max_bid_amount) {
