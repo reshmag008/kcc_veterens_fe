@@ -139,6 +139,7 @@ const AuctionPlayerPage: React.FC = () => {
     PlayerService()
       .GetNonBidPlayers(searchText)
       .then((response: any) => {
+        setIsLoading(false);
         let players = response?.data;
         setSearchText('')
         if (!players) {
@@ -158,7 +159,7 @@ const AuctionPlayerPage: React.FC = () => {
       console.log("response== ", response);
     })
       socket.emit('current_player', JSON.stringify(players));
-          setIsLoading(false);
+          
         } 
       });
   };

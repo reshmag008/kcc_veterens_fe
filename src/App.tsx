@@ -61,9 +61,9 @@ const hideHeader = headerHiddenRoutes.includes(location.pathname);
         <Route path="/teams" element={<TeamList />} />
         <Route path="/auction-live" element={<PlayerAuctionView />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/team_owner_auction" element={<LiveAuctionTeam />} />
-        <Route path="/join_auction" element={<JoinAuction />} />
-        <Route path="/auctioneer_live" element={<AuctioneerLive />} />
+        {/* <Route path="/team_owner_auction" element={<LiveAuctionTeam />} /> */}
+        {/* <Route path="/join_auction" element={<JoinAuction />} /> */}
+        {/* <Route path="/auctioneer_live" element={<AuctioneerLive />} /> */}
       </Routes>
     </div>
   );
