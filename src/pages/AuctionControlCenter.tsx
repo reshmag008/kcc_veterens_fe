@@ -270,7 +270,7 @@ const AuctionPlayerPage: React.FC = () => {
       };
       console.log("params== ", params);
 
-
+      localStorage.setItem("selectedPlayer", JSON.stringify({}));
       PlayerService().sellPlayer(params).then((response: any) => {
         console.log("response.data==", response.data);
         GetPlayer();

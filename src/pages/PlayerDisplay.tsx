@@ -14,6 +14,8 @@ import CelebrationPopup from "./celebrationPopup";
 import PlayerService from "@/service/PlayerService";
 import { Trophy, Users, UserX } from "lucide-react";
 import bklogo from '../assets/bk_logo.jpeg'
+import AuctionLoader from "./AuctionLoader";
+
 
 const PlayerDisplay: React.FC = () => {
   const [socket, setSocket] = useState<any>(null);
@@ -217,6 +219,15 @@ useEffect(() => {
     {/* ===================================================== */}
     {/* PLAYER PROFILE */}
     {/* ===================================================== */}
+
+
+    {!currentBidPlayer?.id ? (
+
+      <AuctionLoader />
+
+
+      
+    ):(
 
     <section
       className="
@@ -547,6 +558,8 @@ useEffect(() => {
       </div>
 
     </section>
+
+    )}
 
 
     {/* ===================================================== */}
