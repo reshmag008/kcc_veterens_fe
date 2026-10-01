@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 
 const AuctionPlayerPage: React.FC = () => {
 
-  const baseAmount = 1000;
+  const baseAmount = 500;
   const [allTeams, setAllTeams] = useState<any>([]);
   const [bidFlow, setBidFlow] = useState<any>([]);
   const [bidAmount, setBidAmount] = useState<number>(0);
