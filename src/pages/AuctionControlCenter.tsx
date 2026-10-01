@@ -272,6 +272,7 @@ const AuctionPlayerPage: React.FC = () => {
 
       localStorage.setItem("selectedPlayer", JSON.stringify({}));
       PlayerService().sellPlayer(params).then((response: any) => {
+        socket.emit('player_sold', JSON.stringify({id:currentBidPlayer.id, team_id:currentBidTeam.id, bid_amount:bidAmount}))
         console.log("response.data==", response.data);
         GetPlayer();
         GetAllTeams();
@@ -325,6 +326,7 @@ const AuctionPlayerPage: React.FC = () => {
     }
 
     PlayerService().setUnsoldPlayer(params).then((response: any) => {
+      socket.emit('player_unsold',  JSON.stringify({id:currentBidPlayer.id}))   
       console.log("response== ", response.data);
       GetPlayer();
     })
