@@ -27,18 +27,81 @@ const AuctionPlayerPage: React.FC = () => {
   const [socket, setSocket] = useState<any>(null);
 
 
-  useEffect(() => {
-    const newSocket = io(BACKEND_URL,{
-                transports: ["polling", "websocket"],
-                withCredentials: true,
-                reconnection: true,
-            });
-    setSocket(newSocket);
-    
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
+   useEffect(() => {
+      
+      const newSocket = io(BACKEND_URL, {
+        transports: ["websocket"], // 👈 prefer websocket only
+        withCredentials: true,
+  
+        reconnection: true,
+        reconnectionAttempts: Infinity,   // 👈 keep trying
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+      });
+  
+      setSocket(newSocket);
+  
+     
+  
+      // 👇 Connection logs (VERY IMPORTANT)
+      newSocket.on("connect", () => {
+        console.log("Connected:", newSocket.id);
+         newSocket.emit("join-room", roomId);
+      });
+  
+      newSocket.on("disconnect", (reason) => {
+        console.log("Disconnected:", reason);
+      });
+  
+      newSocket.on("reconnect_attempt", () => {
+        console.log("Reconnecting...");
+      });
+  
+      newSocket.on("reconnect", () => {
+        console.log("Reconnected!");
+        newSocket.emit("join-room", roomId);
+       
+      });
+      const handleFocus = () => {
+        if (!newSocket.connected) {
+          console.log("Focus reconnect...");
+          newSocket.connect();
+          newSocket.emit("join-room", roomId);
+        }
+      };
+  
+      const interval = setInterval(() => {
+        if (!newSocket.connected) {
+          console.log("Heartbeat reconnect...");
+          newSocket.connect();
+          newSocket.emit("join-room", roomId);
+        }
+      }, 5000);
+  
+  
+      // ✅ 🔥 HANDLE MOBILE SCREEN OFF / ON
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+          console.log("App came back to foreground");
+          console.log(newSocket.connected)
+          if (!newSocket.connected) {
+            console.log("Manually reconnecting...");
+            newSocket.connect();
+            newSocket.emit("join-room", roomId);
+          }
+        }
+      };
+  
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+  
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener("focus", handleFocus);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        newSocket.off();
+        newSocket.disconnect();
+      };
+    }, []);
 
   useEffect(() => {
       if (socket) {
@@ -78,45 +141,29 @@ const AuctionPlayerPage: React.FC = () => {
       .then((response: any) => {
         let players = response?.data;
         setSearchText('')
-        if (players.length === 0) {
+        if (!players) {
           toast.success("No pending players");
           localStorage.setItem("selectedPlayer", JSON.stringify({}));
           localStorage.setItem("team_complete",  JSON.stringify({}))
           localStorage.setItem("currentBidTeam", JSON.stringify({}));
           localStorage.setItem('close_popup', 'false');
         }
-        if (players.length === 1) {
-          setCurrentBidPlayer(players[0]);
-          localStorage.setItem("selectedPlayer", JSON.stringify(players[0]));
+        if (players?.id) {
+          setCurrentBidPlayer(players);
+          localStorage.setItem("selectedPlayer", JSON.stringify(players));
           localStorage.setItem("currentBidTeam", JSON.stringify({}));
           localStorage.setItem("team_complete",  JSON.stringify({}))
           localStorage.setItem('close_popup', 'false');
-          PlayerService().displayPlayer(players[0]).then((response: any) => {
+          PlayerService().displayPlayer(players).then((response: any) => {
       console.log("response== ", response);
     })
+      socket.emit('current_player', JSON.stringify(players));
           setIsLoading(false);
-        } else {
-          setPlayers(players);
-          selectRandomPlayer();
-        }
+        } 
       });
   };
 
-  const selectRandomPlayer = () => {
-    const random = Math.floor(Math.random() * players.length);
-    console.log(random, players[random]);
-    setCurrentBidPlayer(players[random]);
-    console.log("currentBidPlayer== ", players[random]);
-    localStorage.setItem("currentBidTeam", JSON.stringify({}));
-    localStorage.setItem("selectedPlayer", JSON.stringify(players[random]));
-    localStorage.setItem("team_complete",  JSON.stringify({}))
-    localStorage.setItem('close_popup', 'false');
-    PlayerService().displayPlayer(players[random]).then((response: any) => {
-      console.log("response==displayPlayer ", response);
-    })
-    setIsLoading(false);
-  };
-  
+ 
 
    const GetAllTeams = () => {
     try {
@@ -160,6 +207,7 @@ const AuctionPlayerPage: React.FC = () => {
         flow.push(flowItem);
         localStorage.setItem("currentBidTeam", JSON.stringify(flowItem));
         console.log("flow== ", flow);
+        socket.emit('team_call' , JSON.stringify(flow[flow.length - 1]))
         InvokeTeamCall(flow[flow.length - 1])
         setBidFlow(flow);
         console.log("bidFlow== ", bidFlow);
@@ -192,6 +240,7 @@ const AuctionPlayerPage: React.FC = () => {
           }
           flow.push(flowItem);
           localStorage.setItem("currentBidTeam", JSON.stringify(flowItem));
+          socket.emit('team_call' , JSON.stringify(flow[flow.length - 1]))
           InvokeTeamCall(flow[flow.length - 1])
           setBidFlow(flow);
           console.log("bidFlow== ", bidFlow);
