@@ -276,7 +276,7 @@ const LiveAuction: React.FC = () => {
         let player = JSON.parse(message)
         setSoldPlayer(player);
         setCurrentCall({})
-        toast.success(`${player.player_name} sold to ${player.team_name} for ${player.bid_amount}`)
+        // toast.success(`${player.player_name} sold to ${player.team_name} for ${player.bid_amount}`)
         getSoldPlayers();
         GetAllTeams();
         GetAllPlayers();
